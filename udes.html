@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>UDES</title>
+	<link rel="icon" type="image/png" href="logoudes.png"/>
+	<style type="text/css">
+		body{
+			padding: 20px;
+			background-color: #163986;
+			font-family: sans-serif;
+            color: #ffffff;
+		}
+        h1{
+            color: #0f2d6c;
+        }
+		.modal {
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  width: 100%;
+		  height: 100%;
+		  background-color: rgba(0, 0, 0, 0.5);
+		  z-index: 1;
+		  display: none;
+		}
+
+		.modal-content {
+		  position: absolute;
+		  top: 50%;
+		  left: 50%;
+		  transform: translate(-50%, -50%);
+		  background-color: white;
+		  padding: 20px;
+		  border-radius: 5px;
+		  color: #0f2d6c;
+		}
+
+		.modal-message {
+		  font-size: 18px;
+		  margin-bottom: 10px;
+		  color: #0f2d6c;
+		}
+
+		button{
+		  padding: 7px 40px;
+		  color: #133a90;
+		  background-color: white;
+		  cursor: pointer;
+		  transition: all 0.3s ease 0s;
+		  letter-spacing: 2px;
+		  border-radius: 10px;
+		  border-color: white;
+		}
+		button:hover{
+		  background-color: #133a90;
+		  color: rgb(255, 255, 255);
+		  border-color: #133a90;
+		}
+
+	</style>
+</head>
+<body>
+	<div>
+		<center>
+            <img src="logoudes.png" style="width: 200px;"><br>
+            <h1>Cacula la nota final de tu materia</h1>
+            <p>Digita las notas de cada uno de los cortes.</p>
+            <form>
+                <label for="corte1">P1 = 30%:</label>
+                <input type="number" id="corte1" min="0" max="5" step="0.1" required><br><br>
+                <label for="corte2">P2 = 30%:</label>
+                <input type="number" id="corte2" min="0" max="5" step="0.1" required><br><br>
+                <label for="corte3">P3 = 40%:</label>
+                <input type="number" id="corte3" min="0" max="5" step="0.1" required><br><br>
+                <button type="button" onclick="calcularNotaNecesaria()">Calcular nota necesaria</button><br><br>
+				<button type="button" onclick="calcularNota()">Calcular nota final</button>
+
+            </form>
+            <p id="notaFinal"></p>
+
+			<!--div para la funcion ALERTA y su estilo-->
+			<div class="modal" id="alertModal">
+				<div class="modal-content">
+				  <p class="modal-message"></p>
+				  <button class="modal-close" onclick="closeModal()">Cerrar</button>
+				</div>
+			  </div>
+
+		</center>
+		<script>
+			function calcularNota() {
+				// Obtener las notas de los cortes
+				const corte1 = parseFloat(document.getElementById("corte1").value);
+				const corte2 = parseFloat(document.getElementById("corte2").value);
+				const corte3 = parseFloat(document.getElementById("corte3").value);
+
+				// Validar las notas de los cortes
+				if (isNaN(corte1) || isNaN(corte2) || isNaN(corte3)) {
+					showAlert("Ingrese notas válidas.");
+					return;
+				}
+				if((corte1>5.0)||(corte2>5.0)||(corte3>5.0)){
+					showAlert("Ingrese notas válidas.");
+					return;
+				}
+
+				// Calcular la nota final
+				const notaFinal = (corte1 * 0.3) + (corte2 * 0.3) + (corte3 * 0.4);
+
+				// Mostrar la nota final
+				const resultado = document.getElementById("notaFinal");
+				resultado.innerHTML = "Nota Final: " + notaFinal.toFixed(1);
+
+				// Determinar si el estudiante aprobó o no
+				if (notaFinal >= 3.0) {
+					resultado.innerHTML += "<br><br><h3>OH SORPRESA, NO TE LA TIRASTE.</h3>";
+				} else {
+					resultado.innerHTML += "<br><br><h3>Joa mani, no te tocaba :'(</h3>";
+			}
+		}
+
+		function calcularNotaNecesaria() {
+			const corte1 = parseFloat(document.getElementById("corte1").value);
+			const corte2 = parseFloat(document.getElementById("corte2").value);
+
+			if (isNaN(corte1) || isNaN(corte2)) {
+				showAlert("Ingrese notas válidas.");
+				return;
+			}
+
+			const notaNecesaria = (3.0 - (corte1*0.3 + corte2*0.3)) / 0.4;
+
+			const resultado = document.getElementById("notaFinal");
+			resultado.innerHTML = "Nota necesaria en el tercer corte: " + notaNecesaria.toFixed(1);
+		}
+
+		// función para mostrar la ventana modal
+		function showAlert(message) {
+			const modal = document.getElementById("alertModal");
+			const modalMessage = modal.querySelector(".modal-message");
+			modalMessage.textContent = message;
+			modal.style.display = "block";
+		}
+
+		// función para cerrar la ventana modal
+		function closeModal() {
+			const modal = document.getElementById("alertModal");
+			modal.style.display = "none";
+		}
+	</script>
+</div>
+</body>
+
+</html>
